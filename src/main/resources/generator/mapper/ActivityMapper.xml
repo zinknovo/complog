@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.complog.mapper.ActivityMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.complog.domain.Activity">
+            <id property="id" column="id" />
+            <result property="type" column="type" />
+            <result property="dept" column="dept" />
+            <result property="remark" column="remark" />
+            <result property="createdAt" column="created_at" />
+            <result property="updatedAt" column="updated_at" />
+            <result property="creator" column="creator" />
+            <result property="updater" column="updater" />
+            <result property="isDeleted" column="is_deleted" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,type,dept,remark,created_at,updated_at,
+        creator,updater,is_deleted
+    </sql>
+</mapper>
