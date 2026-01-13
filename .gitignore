@@ -31,3 +31,18 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docs and Scripts ###
+docs/
+scripts/
+
+### Markdown Files (except README.md) ###
+# Ignore all .md files except README.md / 忽略所有.md文件，除了README.md
+*.md
+!README.md
+
+# IntelliJ IDEA
+*.ipr
+*.iws
+.idea/
+*.iml

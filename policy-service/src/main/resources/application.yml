@@ -1,0 +1,86 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: policy-service
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/CompLog?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 541551
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # Redis configuration
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+
+  # Spring Cache configuration
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: false
+      key-prefix: complog:
+      use-key-prefix: true
+
+# File upload path configuration (for local storage)
+file:
+  upload:
+    path: /uploads
+
+# Storage configuration (object storage)
+storage:
+  type: local  # Options: local, s3, minio
+  # S3 configuration (for production)
+  s3:
+    bucket: complog-bucket
+    region: us-east-1
+    access-key: ${AWS_ACCESS_KEY:}
+    secret-key: ${AWS_SECRET_KEY:}
+  # MinIO configuration (for test)
+  minio:
+    endpoint: http://localhost:9000
+    bucket: complog-bucket
+    access-key: minioadmin
+    secret-key: minioadmin
+
+# File size limit
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+# MyBatis-Plus configuration
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDeleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# Kafka configuration
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: policy-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest

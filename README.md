@@ -1,76 +1,68 @@
-# CompLog
+# CompLog - 制度管理系统
 
-CompLog is a Spring Boot service for managing activities, tasks, users, and sign-in records. It includes admin/backstage endpoints and a mini‑program interface for activity browsing and user check-ins.
+微服务架构的制度管理系统。
 
-## Features
-- Activity management: add/edit/delete/list, statistics, department stats
-- Task management under activities
-- User and department management
-- User joins and sign-in tracking for activities
+## 项目结构
 
-## Tech Stack
-- Java 11
-- Spring Boot 2.7.x
-- MyBatis-Plus
-- MySQL
-- Redis
-
-## Project Structure
-- `src/main/java/com/example/complog/controller/backagroud` admin/backstage APIs
-- `src/main/java/com/example/complog/controller/miniwechat` mini‑program APIs
-- `src/main/java/com/example/complog/domain` entity models
-- `src/main/resources/mapper` MyBatis XML mappers
-
-## Getting Started
-1. Configure database and Redis in `src/main/resources/application.properties`.
-2. Run locally with Maven:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
-## Configuration Example
-Update `src/main/resources/application.properties` with your environment values:
-```properties
-spring.application.name=complog
-
-# MySQL
-spring.datasource.url=jdbc:mysql://localhost:3306/complog?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-spring.datasource.username=YOUR_DB_USER
-spring.datasource.password=YOUR_DB_PASSWORD
-
-# Redis
-spring.redis.host=localhost
-spring.redis.port=6379
+```
+complog/
+├── base-service/      # 基础服务（User、Department 管理）
+├── auth-service/      # 认证服务（登录、JWT）
+├── policy-service/    # 业务服务（制度管理）
+├── docs/              # 文档
+└── scripts/           # SQL 脚本
 ```
 
-## API Overview
-Admin/backstage:
-- `POST /activities`
-- `PUT /activities/{id}`
-- `DELETE /activities/{id}`
-- `GET /activities`
-- `GET /activities/user-tasks`
-- `GET /activities/user-joins`
-- `GET /activities/statistics`
-- `GET /activities/{activityId}/department-statistics`
-- `GET /activities/{activityId}/tasks`
-- `POST /activities/{activityId}/tasks/{taskId}`
-- `POST /activities/{activityId}/tasks/{taskId}/clone`
-- `DELETE /activities/{activityId}/tasks/{taskId}`
-- `POST /tasks`
-- `PUT /tasks/{id}`
-- `DELETE /tasks/{id}`
-- `GET /tasks`
-- `POST /users`
-- `GET /users`
-- `POST /departments`
-- `GET /departments`
+## 服务说明
 
-Mini‑program:
-- `GET /mini/activities`
-- `POST /mini/activities/{activityId}/registrations`
-- `GET /mini/activities/{activityId}/sign-days`
-- `POST /mini/activities/{activityId}/signs`
+### base-service
+- **端口**: 8080
+- **功能**: User 管理、Department 管理
+- **技术**: Spring Boot + MyBatis-Plus + Redis + Kafka
 
-## License
-See `LICENSE`.
+### auth-service
+- **端口**: 8081
+- **功能**: 用户认证、JWT 生成/验证
+- **技术**: Spring Boot + MyBatis-Plus + JWT
+
+### policy-service
+- **端口**: 8082
+- **功能**: Policy 管理、Revision、Review
+- **技术**: Spring Boot + MyBatis-Plus + Redis + Kafka
+
+## 快速开始
+
+### 1. 启动基础服务
+```bash
+cd base-service
+./mvnw spring-boot:run
+```
+
+### 2. 启动认证服务
+```bash
+cd auth-service
+mvn spring-boot:run
+```
+
+### 3. 启动业务服务
+```bash
+cd policy-service
+mvn spring-boot:run
+```
+
+## 数据库
+
+所有服务共享 MySQL 数据库：**CompLog**
+
+## 消息队列
+
+使用 Kafka 进行异步通信：
+- `policy-events` - 制度事件
+- `user-events` - 用户事件
+- `department-events` - 部门事件
+
+## 详细文档
+
+- [架构说明](ARCHITECTURE.md)
+- [Kafka 配置](docs/KAFKA_SETUP.md)
+- [升级方案](docs/UPGRADE_PLAN.md)
